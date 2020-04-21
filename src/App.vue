@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <h1>Facebook Data Viewer</h1>
-    <input type=file multiple accept=".json" v-on="cli">
+    <FileReader @change="data = $event"></FileReader>
     <TimeChart :chartData="{}" :options="{}" />
     <MostUsedWords />
     <MostUsedEmoji />
@@ -9,16 +9,11 @@
 </template>
 
 <script>
-import TimeChart from "./components/TimeChart.vue";
-import MostUsedWords from "./components/MostUsedWords.vue";
-import MostUsedEmoji from "./components/MostUsedEmoji.vue";
-import {
-  processFile,
-  participants,
-  datasetNbMsgPerDay,
-  datasetNbUsedWords,
-  datasetNbUsedEmoji,
-} from "./assets/processFacebook.js";
+import TimeChart from "./components/TimeChart";
+import MostUsedWords from "./components/MostUsedWords";
+import MostUsedEmoji from "./components/MostUsedEmoji";
+import FileReader from "./components/FileReader";
+import { processData } from "../public/processFacebook.js";
 
 export default {
   name: "App",
@@ -26,8 +21,26 @@ export default {
     TimeChart,
     MostUsedWords,
     MostUsedEmoji,
+    FileReader,
   },
-  
+  data() {
+    return {
+      data: [],
+      participants: [],
+      datasetNbMsgPerDay: [],
+      datasetNbUsedEmoji: [],
+      datasetNbUsedWords: [],
+    };
+  },
+  watch: {
+    data: function(data) {
+      const result = processData(data)
+      this.participants = result.participants
+      this.datasetNbMsgPerDay = result.datasetNbMsgPerDay
+      this.datasetNbUsedEmoji = result.datasetNbUsedEmoji
+      this.datasetNbUsedWords = result.datasetNbUsedWords
+    }
+  },
 };
 </script>
 

@@ -1,3 +1,7 @@
+export {
+    processData
+}
+
 let participants = []
 let datasetNbMsgPerDay = []
 let datasetNbUsedWords = []
@@ -6,39 +10,36 @@ let datasetNbUsedEmoji = []
 // let startDate
 // let lastDate
 
-async function loadJSON(file) {
-    const res = await fetch(file)
-    const data = await res.json()
-    return data
-}
 
-async function processFile(file) {
+function processData(array_data) {
     // Clear the global variables
     participants = []
     datasetNbMsgPerDay = []
     datasetNbUsedWords = []
     datasetNbUsedEmoji = []
 
-    // Get the json data
-    const data = await loadJSON(file)
-    const messages = data.messages.reverse()
-    participants = data.participants
+    array_data.forEach(data => {
+        const messages = data.messages.reverse()
+        participants = data.participants
 
-    // Extracting and process data from the messages
-    messages.forEach(message => {
-        nbMsgPerDay(message)
-        loopWordsInMessage(message)
+        // Extracting and process data from the messages
+        messages.forEach(message => {
+            nbMsgPerDay(message)
+            loopWordsInMessage(message)
+        });
+
+        // Organising datasetNbMsgPerDay in chronological order
+
+        // Extracting data from the created dataset
+
     });
-
-    console.log(participants)
-    console.log(datasetNbMsgPerDay)
-    console.log(datasetNbUsedWords)
-    console.log(datasetNbUsedEmoji)
-
-    // Organising datasetNbMsgPerDay in chronological order
-
-    // Extracting data from the created dataset
-
+    // Returning values
+    return {
+        participants: participants,
+        datasetNbMsgPerDay: datasetNbMsgPerDay,
+        datasetNbUsedWords: datasetNbUsedWords,
+        datasetNbUsedEmoji: datasetNbUsedEmoji,
+    }
 }
 
 function nbMsgPerDay(message) {
@@ -116,14 +117,6 @@ function nbEmojiUsed(emoji) {
     } else {
         found.occurences++
     }
-}
-
-export {
-    processFile,
-    participants,
-    datasetNbMsgPerDay,
-    datasetNbUsedWords,
-    datasetNbUsedEmoji
 }
 
 // var dates = []
