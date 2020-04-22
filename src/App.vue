@@ -6,7 +6,7 @@
       <v-container class="fill-height" fluid>
         <v-row align="center" justify="center">
           <v-col cols="12">
-            <TimeChart :chartData="dataNbMsgPerDay" :styles="mystyle" />
+            <TimeChart :chartData="dataNbMsgPerDay" :styles="timeChartStyle" />
           </v-col>
         </v-row>
         <v-row align="center" justify="center">
@@ -51,7 +51,7 @@ export default {
     },
   },
   computed: {
-    mystyle() {
+    timeChartStyle() {
       return {
         height: "500px",
         position: "relative",

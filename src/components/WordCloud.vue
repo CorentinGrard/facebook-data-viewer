@@ -1,9 +1,9 @@
 <template>
   <div>
     <canvas
-      :style="{ width: width + 'px', height: height + 'px' }"
-      :width="width * 7"
-      :height="height * 7"
+      :style="{ width: options.width + 'px', height: options.height + 'px' }"
+      :width="options.width * 5"
+      :height="options.height * 5"
       ref="canvas"
     ></canvas>
   </div>
@@ -11,30 +11,44 @@
 <script>
 import WordCloud from "wordcloud";
 export default {
-  props: ["wordsList"],
-  data() {
-    return {
-      width: 500,
-      height: 500,
-      nbElements: 100,
-      minSize: 24,
-    };
+  props: {
+    wordsList: Array,
+    options: {
+      type: Object,
+      required: false,
+      default: function() {
+        return {
+          minRotation: 0,
+          maxRotation: 0,
+          width: 500,
+          height: 500,
+          nbElements: 100,
+          minSize: 24,
+        };
+      },
+    },
   },
   mounted() {
-    const elements = this.wordsList.slice(0, this.nbElements);
+    const elements = this.wordsList.slice(0, this.options.nbElements);
     const canvas = this.$refs.canvas;
     WordCloud(canvas, {
       list: elements,
-      minSize: this.minSize,
+      minSize: this.options.minSize,
+      minRotation: this.options.minRotation,
+      maxRotation: this.options.maxRotation,
+      shrinkToFit: true
     });
   },
   watch: {
     wordsList: function(v) {
-      const elements = v.slice(0, this.nbElements);
+      const elements = v.slice(0, this.options.nbElements);
       const canvas = this.$refs.canvas;
       WordCloud(canvas, {
         list: elements,
-        minSize: this.minSize,
+        minSize: this.options.minSize,
+        minRotation: this.options.minRotation,
+        maxRotation: this.options.maxRotation,
+        shrinkToFit: true
       });
     },
   },

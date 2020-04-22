@@ -36,10 +36,14 @@ function processData(array_data) {
 
     // Sorting word/emoji list
     datasetNbUsedWords.sort((a, b) => b[1] - a[1])
+    const wordMax = datasetNbUsedWords[0][1]
+    datasetNbUsedWords = datasetNbUsedWords.map(element => [element[0], Math.round((element[1] / wordMax) * 1000)])
     datasetNbUsedEmoji.sort((a, b) => b[1] - a[1])
-
+    const emojiMax = datasetNbUsedEmoji[0][1]
+    datasetNbUsedEmoji = datasetNbUsedEmoji.map(element => [element[0], Math.round((element[1] / emojiMax) * 1000)])
+    
     // Sorting datasetNbMsgPerDay in chronological order
-    datasetNbMsgPerDay.sort((a,b) => b.date - a.date).reverse()
+    datasetNbMsgPerDay.sort((a, b) => b.date - a.date).reverse()
 
     // Extracting data from the created dataset
     datasetNbMsgPerDay.forEach(day => {
@@ -110,7 +114,6 @@ function loopWordsInMessage(message) {
         const words = message.content.split(' ')
         words.forEach(word => {
             // If the word is an emoji
-            // TODO : find better regex
             const regexEmoji = RegExp(/[\uD800-\uDBFF]|[\u2702-\u27B0]|[\uF680-\uF6C0]|[\u24C2-\uF251]/g)
             if (regexEmoji.test(word)) {
                 nbEmojiUsed(word);
@@ -122,19 +125,21 @@ function loopWordsInMessage(message) {
 }
 
 function nbWordsUsed(word) {
-    let filteredWord = word.toLowerCase()
-    let found = datasetNbUsedWords.find(element => element[0] == filteredWord)
-    if (typeof (found) === "undefined") {
-        datasetNbUsedWords.push([filteredWord, 1])
-    } else {
-        found[1]++
+    let filteredWord = word.toLowerCase().replace(RegExp(/[!"#$%&()*+,\-./;<=>?@[\\\]^_`{|}~]/g), '')
+    if (filteredWord != "") {
+        let found = datasetNbUsedWords.find(element => element[0] == filteredWord)
+        if (typeof (found) === "undefined") {
+            datasetNbUsedWords.push([filteredWord, 1])
+        } else {
+            found[1]++
+        }
     }
 }
 
 function nbEmojiUsed(emoji) {
     let found = datasetNbUsedEmoji.find(element => element[0] == emoji)
     if (typeof (found) === "undefined") {
-        datasetNbUsedEmoji.push([emoji,1])
+        datasetNbUsedEmoji.push([emoji, 1])
     } else {
         found[1]++
     }
