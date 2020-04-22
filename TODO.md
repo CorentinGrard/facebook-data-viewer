@@ -1,7 +1,7 @@
 ### TODO
-* Fix filter emoji / word
-* Fix emoji
 * Create a design
-* Fix display word (é/è/ç...)
 * Add filter word (./!/?)
 * Add total messages on time graph
+* Add color to graph messages per day
+* organize elements in the page
+* Add information box to the input
