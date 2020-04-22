@@ -39,7 +39,7 @@ function processData(array_data) {
     datasetNbUsedEmoji.sort((a, b) => b[1] - a[1])
 
     // Sorting datasetNbMsgPerDay in chronological order
-    datasetNbMsgPerDay.sort((a,b) => b.date - a.date)
+    datasetNbMsgPerDay.sort((a,b) => b.date - a.date).reverse()
 
     // Extracting data from the created dataset
     datasetNbMsgPerDay.forEach(day => {
