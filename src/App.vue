@@ -1,17 +1,26 @@
 <template>
-  <div id="app">
-    <h1>Facebook Data Viewer</h1>
-    <FileReader @change="data = $event"></FileReader>
-    <TimeChart :chartData="{}" :options="{}" />
-    <MostUsedWords />
-    <MostUsedEmoji />
-  </div>
+  <v-app id="inspire">
+    <v-content>
+      <h1>Facebook Data Viewer</h1>
+      <FileReader @change="data = $event"></FileReader>
+      <v-container class="fill-height" fluid>
+        <v-row align="center" justify="center">
+          <v-col cols="12">
+            <TimeChart :chartData="dataNbMsgPerDay" :options="{}" />
+          </v-col>
+        </v-row>
+        <v-row align="center" justify="center">
+          <WordCloud :wordsList="datasetNbUsedWords" />
+          <WordCloud :wordsList="datasetNbUsedEmoji" />
+        </v-row>
+      </v-container>
+    </v-content>
+  </v-app>
 </template>
 
 <script>
 import TimeChart from "./components/TimeChart";
-import MostUsedWords from "./components/MostUsedWords";
-import MostUsedEmoji from "./components/MostUsedEmoji";
+import WordCloud from "./components/WordCloud";
 import FileReader from "./components/FileReader";
 import { processData } from "../public/processFacebook.js";
 
@@ -19,27 +28,26 @@ export default {
   name: "App",
   components: {
     TimeChart,
-    MostUsedWords,
-    MostUsedEmoji,
+    WordCloud,
     FileReader,
   },
   data() {
     return {
       data: [],
       participants: [],
-      datasetNbMsgPerDay: [],
+      dataNbMsgPerDay: {},
       datasetNbUsedEmoji: [],
       datasetNbUsedWords: [],
     };
   },
   watch: {
     data: function(data) {
-      const result = processData(data)
-      this.participants = result.participants
-      this.datasetNbMsgPerDay = result.datasetNbMsgPerDay
-      this.datasetNbUsedEmoji = result.datasetNbUsedEmoji
-      this.datasetNbUsedWords = result.datasetNbUsedWords
-    }
+      const result = processData(data);
+      this.participants = result.participants;
+      this.dataNbMsgPerDay = result.dataNbMsgPerDay;
+      this.datasetNbUsedEmoji = result.datasetNbUsedEmoji;
+      this.datasetNbUsedWords = result.datasetNbUsedWords;
+    },
   },
 };
 </script>

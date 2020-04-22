@@ -18,6 +18,11 @@ function processData(array_data) {
     datasetNbUsedWords = []
     datasetNbUsedEmoji = []
 
+    let dataNbMsgPerDay = {
+        labels: [],
+        datasets: []
+    }
+
     array_data.forEach(data => {
         const messages = data.messages.reverse()
         participants = data.participants
@@ -27,16 +32,37 @@ function processData(array_data) {
             nbMsgPerDay(message)
             loopWordsInMessage(message)
         });
-
-        // Organising datasetNbMsgPerDay in chronological order
-
-        // Extracting data from the created dataset
-
     });
+
+    // Sorting word/emoji list
+    datasetNbUsedWords.sort((a, b) => b[1] - a[1])
+    datasetNbUsedEmoji.sort((a, b) => b[1] - a[1])
+
+    // Organising datasetNbMsgPerDay in chronological order
+
+    // Extracting data from the created dataset
+    datasetNbMsgPerDay.forEach(day => {
+        let date = day.date
+        dataNbMsgPerDay.labels.push(date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear())
+        day.participants.forEach(participant => {
+            let dataset = dataNbMsgPerDay.datasets.find(dataset => dataset.label == participant.name)
+            if (typeof (dataset) === "undefined") {
+                dataset = {
+                    label: participant.name,
+                    data: []
+                }
+                dataNbMsgPerDay.datasets.push(dataset)
+            }
+            dataset.data.push(participant.nbMsg)
+
+        })
+    });
+
+    console.log(datasetNbUsedEmoji)
     // Returning values
     return {
         participants: participants,
-        datasetNbMsgPerDay: datasetNbMsgPerDay,
+        dataNbMsgPerDay: dataNbMsgPerDay,
         datasetNbUsedWords: datasetNbUsedWords,
         datasetNbUsedEmoji: datasetNbUsedEmoji,
     }
@@ -51,30 +77,31 @@ function nbMsgPerDay(message) {
     //         nbMsg: 50
     //     }]
     // }]
+    let participantsMsg = []
+    participants.forEach(participant => {
+        participantsMsg.push({
+            name: participant.name,
+            nbMsg: 0
+        })
+    });
+
     let dateMessage = new Date(message.timestamp_ms)
     let day = new Date(dateMessage.getUTCFullYear(), dateMessage.getUTCMonth(), dateMessage.getUTCDate())
     const day_found = datasetNbMsgPerDay.find(element => element.date.getTime() == day.getTime())
     // If the day doesnt exist let's create it
     if (typeof (day_found) === "undefined") {
+        let participant = participantsMsg.find((participant) =>
+            participant.name == message.sender_name
+        )
+        participant.nbMsg++
         datasetNbMsgPerDay.push({
             date: day,
-            participants: [{
-                name: message.sender_name,
-                nbMsg: 1
-            }]
+            participants: participantsMsg
         })
     } else {
-        // If the participant doesn't exist let's add it
         const participant_found = day_found.participants.find(participant => participant.name == message.sender_name)
-        if (typeof (participant_found) === 'undefined') {
-            day_found.participants.push({
-                name: message.sender_name,
-                nbMsg: 1
-            })
-        } else {
-            // Increase the number of cumulated messages
-            participant_found.nbMsg++
-        }
+        // Increase the number of cumulated messages
+        participant_found.nbMsg++
     }
 }
 
@@ -96,102 +123,19 @@ function loopWordsInMessage(message) {
 
 function nbWordsUsed(word) {
     let filteredWord = word.toLowerCase()
-    let found = datasetNbUsedWords.find(element => element.word == filteredWord)
+    let found = datasetNbUsedWords.find(element => element[0] == filteredWord)
     if (typeof (found) === "undefined") {
-        datasetNbUsedWords.push({
-            word: filteredWord,
-            occurences: 1
-        })
+        datasetNbUsedWords.push([filteredWord, 1])
     } else {
-        found.occurences++
+        found[1]++
     }
 }
 
 function nbEmojiUsed(emoji) {
     let found = datasetNbUsedEmoji.find(element => element.emoji == emoji)
     if (typeof (found) === "undefined") {
-        datasetNbUsedEmoji.push({
-            emoji: emoji,
-            occurences: 1
-        })
+        datasetNbUsedEmoji.push([emoji,1])
     } else {
-        found.occurences++
+        found[1]++
     }
 }
-
-// var dates = []
-// messages.forEach(message => {
-//     var date = new Date(message.timestamp_ms)
-//     var date_clean = date.getUTCDate() + '/' + date.getUTCMonth() + '/' + date.getUTCFullYear()
-//     if (dates[dates.length - 1] == date_clean) {
-//         participants.forEach(participant => {
-//             if (participant.name == message.sender_name) {
-//                 participant.count++
-//             }
-//         })
-//     } else {
-//         dates.push(date.getUTCDate() + '/' + date.getUTCMonth() + '/' + date.getUTCFullYear())
-//         participants.forEach(participant => {
-//             participant.data.push(participant.count)
-//             participant.total_messages += participant.count
-//             participant.count = 0
-//         })
-//     }
-// });
-
-// const datasets_message_by_date = []
-// participants.forEach(participant => {
-//     participant.data.push(participant.count)
-//     participant.data.shift()
-//     participant.count = 0
-//     let R = Math.floor(Math.random() * 255) + 1
-//     let G = Math.floor(Math.random() * 255) + 1
-//     let B = Math.floor(Math.random() * 255) + 1
-//     datasets_message_by_date.push({
-//         label: participant.name + ' messages',
-//         data: participant.data,
-//         borderWidth: 1,
-//         backgroundColor: [
-//             'rgba(' + R + ', ' + G + ', ' + B + ', 0.2)',
-//         ],
-//         borderColor: [
-//             'rgba(' + R + ', ' + G + ', ' + B + ', 1)',
-//         ],
-//     })
-// })
-// const data_message_by_date = {
-//     labels: dates,
-//     datasets: datasets_message_by_date
-// }
-
-// var parcipants_names = []
-// var datasets_data_messages_by_person= []
-// var colors_messages_by_person = []
-// participants.forEach(participant => {
-//     datasets_data_messages_by_person.push(participant.total_messages)
-//     parcipants_names.push(participant.name)
-//     let R = Math.floor(Math.random() * 255) + 1
-//     let G = Math.floor(Math.random() * 255) + 1
-//     let B = Math.floor(Math.random() * 255) + 1
-//     colors_messages_by_person.push('rgba(' + R + ', ' + G + ', ' + B + ', 0.2)')
-// })
-// const datasets_messages_by_person= {
-//     data: datasets_data_messages_by_person,
-//     borderWidth: 1,
-//     backgroundColor: colors_messages_by_person
-// }
-
-// const data_messages_by_person = {
-//     labels: parcipants_names,
-//     datasets: [datasets_messages_by_person]
-// }
-// var message_by_date = document.getElementById('message_by_date');
-// var chart_messages_by_date = new Chart(message_by_date, {
-//     type: 'line',
-//     data: data_message_by_date
-// });
-// var messages_by_person = document.getElementById('messages_by_person');
-// var doughnutChart = new Chart(messages_by_person, {
-//     type: 'doughnut',
-//     data: data_messages_by_person,
-// });
