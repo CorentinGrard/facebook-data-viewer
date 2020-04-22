@@ -24,7 +24,7 @@ function processData(array_data) {
     }
 
     array_data.forEach(data => {
-        const messages = data.messages.reverse()
+        const messages = data.messages
         participants = data.participants
 
         // Extracting and process data from the messages
@@ -38,7 +38,8 @@ function processData(array_data) {
     datasetNbUsedWords.sort((a, b) => b[1] - a[1])
     datasetNbUsedEmoji.sort((a, b) => b[1] - a[1])
 
-    // Organising datasetNbMsgPerDay in chronological order
+    // Sorting datasetNbMsgPerDay in chronological order
+    datasetNbMsgPerDay.sort((a,b) => b.date - a.date)
 
     // Extracting data from the created dataset
     datasetNbMsgPerDay.forEach(day => {
@@ -58,7 +59,6 @@ function processData(array_data) {
         })
     });
 
-    console.log(datasetNbUsedEmoji)
     // Returning values
     return {
         participants: participants,
@@ -132,7 +132,7 @@ function nbWordsUsed(word) {
 }
 
 function nbEmojiUsed(emoji) {
-    let found = datasetNbUsedEmoji.find(element => element.emoji == emoji)
+    let found = datasetNbUsedEmoji.find(element => element[0] == emoji)
     if (typeof (found) === "undefined") {
         datasetNbUsedEmoji.push([emoji,1])
     } else {

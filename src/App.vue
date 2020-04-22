@@ -6,7 +6,7 @@
       <v-container class="fill-height" fluid>
         <v-row align="center" justify="center">
           <v-col cols="12">
-            <TimeChart :chartData="dataNbMsgPerDay" :options="{}" />
+            <TimeChart :chartData="dataNbMsgPerDay" :styles="mystyle" />
           </v-col>
         </v-row>
         <v-row align="center" justify="center">
@@ -25,6 +25,7 @@ import FileReader from "./components/FileReader";
 import { processData } from "../public/processFacebook.js";
 
 export default {
+  title: "Facebook Data Viewer",
   name: "App",
   components: {
     TimeChart,
@@ -47,6 +48,14 @@ export default {
       this.dataNbMsgPerDay = result.dataNbMsgPerDay;
       this.datasetNbUsedEmoji = result.datasetNbUsedEmoji;
       this.datasetNbUsedWords = result.datasetNbUsedWords;
+    },
+  },
+  computed: {
+    mystyle() {
+      return {
+        height: "500px",
+        position: "relative",
+      };
     },
   },
 };
