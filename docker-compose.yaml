@@ -1,0 +1,23 @@
+version: '3.7'
+services: 
+
+  facebookdataviewer:
+    build: .
+    image: facebookdataviewer
+    container_name: facebookdataviewer
+    restart: always
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=web"
+      - "traefik.port=80"
+      - "traefik.entryPoint=https"
+      - "traefik.backend=facebookdataviewer"
+      - "traefik.frontend.rule=Host:fb-data-viewer.ml"
+
+networks:
+  web:
+    internal: false
+    external:
+      name: traefik_webgateway
