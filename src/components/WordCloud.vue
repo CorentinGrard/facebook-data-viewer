@@ -36,7 +36,8 @@ export default {
       minSize: this.options.minSize,
       minRotation: this.options.minRotation,
       maxRotation: this.options.maxRotation,
-      shrinkToFit: true
+      shrinkToFit: true,
+      backgroundColor: "#fefff7",
     });
   },
   watch: {
@@ -48,7 +49,8 @@ export default {
         minSize: this.options.minSize,
         minRotation: this.options.minRotation,
         maxRotation: this.options.maxRotation,
-        shrinkToFit: true
+        shrinkToFit: true,
+        backgroundColor: "#fefff7",
       });
     },
   },

@@ -1,12 +1,12 @@
 <template>
-  <v-app id="inspire">
+  <v-app id="app">
     <v-content>
       <h1>Facebook Data Viewer</h1>
       <FileReader @change="data = $event"></FileReader>
       <v-container class="fill-height" fluid>
         <v-row align="center" justify="center">
           <v-col cols="12">
-            <TimeChart :chartData="dataNbMsgPerDay" :styles="timeChartStyle" />
+            <TimeChart :chartData="dataNbMsgPerDay" />
           </v-col>
         </v-row>
         <v-row align="center" justify="center">
@@ -50,14 +50,6 @@ export default {
       this.datasetNbUsedWords = result.datasetNbUsedWords;
     },
   },
-  computed: {
-    timeChartStyle() {
-      return {
-        height: "500px",
-        position: "relative",
-      };
-    },
-  },
 };
 </script>
 
@@ -67,7 +59,9 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #247ba0;
   margin-top: 60px;
+  background-color: #fefff7;
+  margin: 0;
 }
 </style>
