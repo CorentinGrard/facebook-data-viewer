@@ -1,20 +1,22 @@
 <template>
   <v-app id="app">
-    <v-content>
-      <h1>Facebook Data Viewer</h1>
-      <FileReader @change="data = $event"></FileReader>
-      <v-container class="fill-height" fluid>
-        <v-row align="center" justify="center">
-          <v-col cols="12">
-            <TimeChart :chartData="dataNbMsgPerDay" />
-          </v-col>
-        </v-row>
-        <v-row align="center" justify="center">
-          <WordCloud :wordsList="datasetNbUsedWords" />
-          <WordCloud :wordsList="datasetNbUsedEmoji" />
-        </v-row>
+    <v-main>
+      <v-container fluid>
+        <h1>Facebook Data Viewer</h1>
+        <FileReader @change="data = $event"></FileReader>
+        <v-container fluid v-if="data.length > 0">
+          <v-row align="center" justify="center">
+            <v-col cols="12">
+              <TimeChart :chartData="dataNbMsgPerDay" />
+            </v-col>
+          </v-row>
+          <v-row align="center" justify="center">
+            <WordCloud :wordsList="datasetNbUsedWords" />
+            <WordCloud :wordsList="datasetNbUsedEmoji" />
+          </v-row>
+        </v-container>
       </v-container>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
@@ -42,8 +44,9 @@ export default {
     };
   },
   watch: {
-    data: function(data) {
+    data: function (data) {
       const result = processData(data);
+      console.log(result)
       this.participants = result.participants;
       this.dataNbMsgPerDay = result.dataNbMsgPerDay;
       this.datasetNbUsedEmoji = result.datasetNbUsedEmoji;

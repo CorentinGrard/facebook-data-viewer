@@ -10,6 +10,7 @@ export default {
     this.renderChart(this.chartData, {
       responsive: true,
       maintainAspectRatio: false,
+      responsiveAnimationDuration: 50,
     });
   },
 };
