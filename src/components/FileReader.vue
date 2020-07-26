@@ -3,6 +3,8 @@
     multiple
     accept="application/json"
     @change="loadTextFromFile"
+    chips
+    label="Select your messages files"
   ></v-file-input>
 </template>
 

@@ -6,9 +6,10 @@ let participants = []
 let datasetNbMsgPerDay = []
 let datasetNbUsedWords = []
 let datasetNbUsedEmoji = []
-// let nbMessagesTotal
-// let startDate
-// let lastDate
+let nbTotalMsg = 0
+let startDate = 0
+let lastDate = 0
+let msgPerDay = 0
 
 
 function processData(array_data) {
@@ -31,6 +32,7 @@ function processData(array_data) {
         messages.forEach(message => {
             nbMsgPerDay(message)
             loopWordsInMessage(message)
+            nbTotalMsg++;
         });
     });
 
@@ -41,10 +43,12 @@ function processData(array_data) {
     datasetNbUsedEmoji.sort((a, b) => b[1] - a[1])
     const emojiMax = datasetNbUsedEmoji[0][1]
     datasetNbUsedEmoji = datasetNbUsedEmoji.map(element => [element[0], Math.round((element[1] / emojiMax) * 1000)])
-    
+
+
     // Sorting datasetNbMsgPerDay in chronological order
     datasetNbMsgPerDay.sort((a, b) => b.date - a.date).reverse()
-
+    startDate = datasetNbMsgPerDay[0].date
+    lastDate = datasetNbMsgPerDay[datasetNbMsgPerDay.length - 1].date
     // Extracting data from the created dataset
     datasetNbMsgPerDay.forEach(day => {
         let date = day.date
@@ -52,9 +56,14 @@ function processData(array_data) {
         day.participants.forEach(participant => {
             let dataset = dataNbMsgPerDay.datasets.find(dataset => dataset.label == participant.name)
             if (typeof (dataset) === "undefined") {
+                let R = Math.floor(Math.random() * 255)
+                let G = Math.floor(Math.random() * 255)
+                let B = Math.floor(Math.random() * 255)
                 dataset = {
                     label: participant.name,
-                    data: []
+                    data: [],
+                    backgroundColor: "rgba(" + R + ", " + G + ", " + B + ", 0.3)",
+                    borderColor: "rgba(" + R + ", " + G + ", " + B + ", 1)",
                 }
                 dataNbMsgPerDay.datasets.push(dataset)
             }
@@ -63,24 +72,22 @@ function processData(array_data) {
         })
     });
 
+    let duration = Math.floor((lastDate - startDate) / 1000 / 60 / 60 / 24)
+    msgPerDay = Math.round(nbTotalMsg / duration)
+
     // Returning values
     return {
         participants: participants,
         dataNbMsgPerDay: dataNbMsgPerDay,
         datasetNbUsedWords: datasetNbUsedWords,
         datasetNbUsedEmoji: datasetNbUsedEmoji,
+        duration: duration,
+        nbTotalMsg: nbTotalMsg,
+        msgPerDay: msgPerDay
     }
 }
 
 function nbMsgPerDay(message) {
-    // The goal is to create a array like : 
-    // datasetNbMsgPerDay = [{
-    //     date: "",
-    //     participants: [{
-    //         name: Paul,
-    //         nbMsg: 50
-    //     }]
-    // }]
     let participantsMsg = []
     participants.forEach(participant => {
         participantsMsg.push({

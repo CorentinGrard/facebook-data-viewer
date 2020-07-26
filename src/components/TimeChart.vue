@@ -8,10 +8,10 @@ export default {
   name: "TimeChart",
   mounted() {
     this.renderChart(this.chartData, {
-      responsive: true,
-      maintainAspectRatio: false,
-      responsiveAnimationDuration: 50,
-    });
+        responsive: true,
+        maintainAspectRatio: false,
+        responsiveAnimationDuration: 50,
+      });
   },
 };
 </script>

@@ -1,9 +1,17 @@
 <template>
-  <v-app id="app">
+  <v-app>
+    <v-app-bar app hide-on-scroll class="d-flex justify-center primary">
+      <h1>Facebook Data Viewer</h1>
+    </v-app-bar>
     <v-main>
       <v-container fluid>
-        <h1>Facebook Data Viewer</h1>
-        <FileReader @change="data = $event"></FileReader>
+        <v-row>
+          <v-col cols="3"></v-col>
+          <v-col cols="6">
+            <FileReader @change="data = $event"></FileReader>
+          </v-col>
+          <v-col cols="3"></v-col>
+        </v-row>
         <v-container fluid v-if="data.length > 0">
           <v-row align="center" justify="center">
             <v-col cols="12">
@@ -11,12 +19,24 @@
             </v-col>
           </v-row>
           <v-row align="center" justify="center">
-            <WordCloud :wordsList="datasetNbUsedWords" />
-            <WordCloud :wordsList="datasetNbUsedEmoji" />
+            <WordCloud class="mr-4" title="Most used words" :wordsList="datasetNbUsedWords" />
+            <WordCloud class="mr-4" title="Most used emoji" :wordsList="datasetNbUsedEmoji" />
+            <v-card class="mr-4">
+              <v-card-title>Statistics</v-card-title>
+              <v-card-text>Total number of messages : {{nbTotalMsg}}</v-card-text>
+              <v-card-text>Days of conversation : {{duration}}</v-card-text>
+              <v-card-text>Messages per day : {{msgPerDay}}</v-card-text>
+            </v-card>
           </v-row>
         </v-container>
       </v-container>
     </v-main>
+    <v-footer app class="d-flex justify-center">
+      Made by Corentin Grard -
+      <a
+        href="https://github.com/CorentinGrard/facebook-data-viewer"
+      >Source code</a>
+    </v-footer>
   </v-app>
 </template>
 
@@ -38,6 +58,9 @@ export default {
     return {
       data: [],
       participants: [],
+      duration: 0,
+      nbTotalMsg: 0,
+      msgPerDay: 0,
       dataNbMsgPerDay: {},
       datasetNbUsedEmoji: [],
       datasetNbUsedWords: [],
@@ -46,25 +69,14 @@ export default {
   watch: {
     data: function (data) {
       const result = processData(data);
-      console.log(result)
       this.participants = result.participants;
       this.dataNbMsgPerDay = result.dataNbMsgPerDay;
       this.datasetNbUsedEmoji = result.datasetNbUsedEmoji;
       this.datasetNbUsedWords = result.datasetNbUsedWords;
+      this.duration = result.duration;
+      this.nbTotalMsg = result.nbTotalMsg;
+      this.msgPerDay = result.msgPerDay;
     },
   },
 };
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #247ba0;
-  margin-top: 60px;
-  background-color: #fefff7;
-  margin: 0;
-}
-</style>
