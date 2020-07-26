@@ -1,7 +1,8 @@
 ### TODO
-* Create a design
-* Add filter word (./!/?)
-* Add total messages on time graph
-* Add color to graph messages per day
-* organize elements in the page
-* Add information box to the input
+* Filter emoji
+* Filter words to remove the xD :p :) and the single caracters and usual words
+* Add stat about individuals
+* Add favicon
+* Fix bug change message doesn't work
+* Make beautiful presentation
+* Time chart : add every day to the chart, not only the day there is messages
