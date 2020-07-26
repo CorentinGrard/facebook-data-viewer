@@ -29,13 +29,21 @@
             </v-card>
           </v-row>
         </v-container>
+        <v-container v-else>
+          <p>This website will show you some data about your facebook message.</p>
+          <p>To use the website you need to first downlaod your facebook data. To do so go on : Setting --> Your facebook information --> Download your information --> Select the Json format --> Select "Messages" --> Click on "Create File"</p>
+          <p>Once your data are ready, download them and select on the website the conversation you want to analyse.</p>
+          <p>
+            All the data stay on your computer and you can look at the source code
+            <a href="https://github.com/CorentinGrard/facebook-data-viewer">here</a>
+          </p>
+        </v-container>
       </v-container>
     </v-main>
     <v-footer app class="d-flex justify-center">
-      Made by Corentin Grard -
-      <a
-        href="https://github.com/CorentinGrard/facebook-data-viewer"
-      >Source code</a>
+      Made by
+      <a href="https://github.com/CorentinGrard">Corentin Grard</a> -
+      <a href="https://github.com/CorentinGrard/facebook-data-viewer">Source code</a>
     </v-footer>
   </v-app>
 </template>
@@ -76,6 +84,7 @@ export default {
       this.duration = result.duration;
       this.nbTotalMsg = result.nbTotalMsg;
       this.msgPerDay = result.msgPerDay;
+      console.log(this.datasetNbUsedWords);
     },
   },
 };

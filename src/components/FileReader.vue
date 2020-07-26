@@ -15,6 +15,9 @@ export default {
   methods: {
     loadTextFromFile(files) {
       let result = [];
+      if (files.length == 0) {
+        this.$emit("change", result);
+      }
       files.forEach((file) => {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -23,9 +26,9 @@ export default {
               let tmp = iconv.encode(value, "latin1");
               return iconv.decode(tmp, "utf-8");
             }
-            return value
+            return value;
           });
-          result.push(data)
+          result.push(data);
           if (result.length == files.length) {
             console.log("Files loaded");
             this.$emit("change", result);

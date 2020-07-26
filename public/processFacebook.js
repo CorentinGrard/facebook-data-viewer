@@ -18,6 +18,10 @@ function processData(array_data) {
     datasetNbMsgPerDay = []
     datasetNbUsedWords = []
     datasetNbUsedEmoji = []
+    nbTotalMsg = 0
+    startDate = 0
+    lastDate = 0
+    msgPerDay = 0
 
     let dataNbMsgPerDay = {
         labels: [],
@@ -75,6 +79,7 @@ function processData(array_data) {
     let duration = Math.floor((lastDate - startDate) / 1000 / 60 / 60 / 24)
     msgPerDay = Math.round(nbTotalMsg / duration)
 
+    console.log("Data extracted")
     // Returning values
     return {
         participants: participants,
