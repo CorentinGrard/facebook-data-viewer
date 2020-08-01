@@ -13,7 +13,7 @@
     "iconv-lite": "^0.5.2",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.0",
-    "vuetify": "^2.3.6",
+    "vuetify": "^2.3.7",
     "wordcloud": "^1.1.1"
   },
   "devDependencies": {
